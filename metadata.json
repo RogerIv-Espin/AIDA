@@ -1,0 +1,6 @@
+{
+  "name": "Azure Solution Architect AI",
+  "description": "Asistente inteligente para diseño de arquitecturas de solución Azure con diagramas interactivos, Policy as Code, RBAC, ARM Templates y Azure Bicep.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
