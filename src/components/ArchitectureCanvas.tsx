@@ -90,6 +90,12 @@ export function ArchitectureCanvas({ solution, onSelectService }: ArchitectureCa
         setExporting(false);
       };
 
+      image.onerror = (err) => {
+        console.error('Image load failed:', err);
+        URL.revokeObjectURL(blobURL);
+        setExporting(false);
+      };
+
       image.src = blobURL;
     } catch (err) {
       console.error('Error exporting image:', err);
@@ -160,6 +166,25 @@ export function ArchitectureCanvas({ solution, onSelectService }: ArchitectureCa
             >
               <Download className="w-3.5 h-3.5" />
               <span>JPG</span>
+            </button>
+            <button
+              onClick={() => {
+                if (!svgRef.current) return;
+                const svgString = new XMLSerializer().serializeToString(svgRef.current);
+                const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `azure-architecture-${solution.metadata.environment}-${Date.now()}.svg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>SVG</span>
             </button>
           </div>
         </div>
@@ -330,11 +355,12 @@ export function ArchitectureCanvas({ solution, onSelectService }: ArchitectureCa
                   />
 
                   {/* Azure Icon */}
-                  <foreignObject x="12" y="14" width="44" height="44">
-                    <div className="w-full h-full flex items-center justify-center p-1 rounded-md bg-slate-900/80 border border-slate-800">
+                  <g transform="translate(12, 14)">
+                    <rect width="44" height="44" rx="6" fill="#020617" stroke="#1E293B" strokeWidth="1" />
+                    <g transform="translate(6, 6)">
                       <RenderAzureIcon icon={node.id} size={32} />
-                    </div>
-                  </foreignObject>
+                    </g>
+                  </g>
 
                   {/* Node Name */}
                   <text

@@ -16,16 +16,23 @@ import {
 interface IaCViewProps {
   solution: ArchitectureSolution;
   versionHistory: ArmVersionRecord[];
+  initialTab?: 'bicep' | 'arm' | 'terraform';
   onSaveNewVersion: (version: string, changelog: string) => void;
   onSelectHistoricalVersion?: (entry: ArmVersionRecord) => void;
 }
 
-export function IaCView({ solution, versionHistory, onSaveNewVersion, onSelectHistoricalVersion }: IaCViewProps) {
-  const [activeIaC, setActiveIaC] = useState<'bicep' | 'arm' | 'terraform'>('bicep');
+export function IaCView({ solution, versionHistory, initialTab = 'bicep', onSaveNewVersion, onSelectHistoricalVersion }: IaCViewProps) {
+  const [activeIaC, setActiveIaC] = useState<'bicep' | 'arm' | 'terraform'>(initialTab);
   const [copied, setCopied] = useState(false);
   const [showVersionModal, setShowVersionModal] = useState(false);
   const [newVersionTag, setNewVersionTag] = useState('1.1.0');
   const [changelogNote, setChangelogNote] = useState('Ajuste de cuotas y políticas de alta disponibilidad.');
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveIaC(initialTab);
+    }
+  }, [initialTab]);
 
   const handleCopy = (content: string) => {
     navigator.clipboard.writeText(content);

@@ -302,6 +302,18 @@ export default function App() {
     }
   };
 
+  // ARM Version historical selection handler
+  const handleSelectHistoricalVersion = (historicalRecord: ArmVersionRecord) => {
+    setSolution((prev) => prev ? {
+      ...prev,
+      arm_template: historicalRecord.template,
+      metadata: {
+        ...prev.metadata,
+        arm_version: historicalRecord.version
+      }
+    } : null);
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100">
       {/* =========================================================================
@@ -425,7 +437,9 @@ export default function App() {
                 <IaCView
                   solution={solution}
                   versionHistory={versionHistory}
+                  initialTab="bicep"
                   onSaveNewVersion={handleSaveNewVersion}
+                  onSelectHistoricalVersion={handleSelectHistoricalVersion}
                 />
               )}
 
@@ -433,7 +447,9 @@ export default function App() {
                 <IaCView
                   solution={solution}
                   versionHistory={versionHistory}
+                  initialTab="arm"
                   onSaveNewVersion={handleSaveNewVersion}
+                  onSelectHistoricalVersion={handleSelectHistoricalVersion}
                 />
               )}
             </>
